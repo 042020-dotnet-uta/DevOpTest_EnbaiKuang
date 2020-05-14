@@ -4,11 +4,13 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  - master
 
-Pool:'ubuntu-latest'
+pool:
+  vmImage: 'ubuntu-latest'
 
-pr:'none'
+
+pr: 'none'
 
 stages:
   - stage:
@@ -17,15 +19,11 @@ stages:
         steps:
           -script: 'dotnet build'
 
-  - stage:
-    jobs:
       - job: 'test'
         dependOn: 'build'
         steps:
           - script: 'dotnet test'
 
-  - stage:
-    jobs:
       - job: 'publish'
         dependOn: 'test'
         steps:
