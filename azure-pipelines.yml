@@ -6,14 +6,29 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
+Pool:'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+pr:'none'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+  - stage:
+    jobs:
+      - job: 'build'
+        steps:
+          -script: 'dotnet build'
+
+  - stage:
+    jobs:
+      - job: 'test'
+        dependOn: 'build'
+        steps:
+          - script: 'dotnet test'
+
+  - stage:
+    jobs:
+      - job: 'publish'
+        dependOn: 'test'
+        steps:
+          -script: 'dotnet publish'
+
+name:'$(date:yyyyMMdd)$(rev:rr)'
